@@ -9,6 +9,10 @@ const userSchema = new mongoose.Schema({
   name: { type: String },
   email: { type: String },
   password: { type: String },
+  profileImage: {
+    data: Buffer,
+    contentType: String,
+  },
 });
 
 const User = mongoose.model("User", userSchema);
