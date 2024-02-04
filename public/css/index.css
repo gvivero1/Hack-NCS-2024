@@ -1,0 +1,4 @@
+h1, img {
+    display: inline;
+    vertical-align: middle; /* Optional: Aligns the elements vertically */
+}
