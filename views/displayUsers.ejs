@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Users</title>
+  </head>
+  <body>
+    <h1>Users</h1>
+    <ul>
+      <% users.forEach(function(user) { %>
+      <li>
+        <strong><%= user.username %></strong>
+        <span><%= user.email %></span>
+        <% if (user.profileImage && user.profileImage.data) { %>
+        <img
+          src="data:<%= user.profileImage.contentType %>;base64,<%= user.profileImage.data.toString('base64') %>"
+          alt="Profile Image"
+          style="width: 100px; height: 100px; border-radius: 50%"
+        />
+        <% } else { %>
+        <p>No profile image available</p>
+        <% } %>
+      </li>
+      <% }); %>
+    </ul>
+  </body>
+</html>

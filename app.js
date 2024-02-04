@@ -5,6 +5,7 @@ const multer = require("multer");
 const mongoose = require("mongoose");
 const client = require("./db");
 const User = require("./models/userModels");
+const { getAllUsers } = require("./controllers/userController");
 
 const app = express();
 
@@ -59,11 +60,23 @@ app.post("/signup", upload.single("profileImage"), (req, res) => {
   user.email = req.body.email;
 
   if (req.file) {
-    user.profileImage = req.file.buffer;
-    user.profileImage.contentType = req.file.mimetype;
+    user.profileImage = {
+      data: req.file.buffer,
+      contentType: req.file.mimetype,
+    };
   }
   // add user to the database
   user.save().then((result) => {
     res.redirect("/");
   });
+});
+
+app.get("/displayUsers", async (req, res) => {
+  try {
+    const users = await getAllUsers();
+    res.render("displayUsers", { users: users });
+  } catch (err) {
+    console.error("Error retrieving users:", err);
+    res.status(500).send("Error retrieving users");
+  }
 });
