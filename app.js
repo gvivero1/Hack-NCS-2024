@@ -6,6 +6,9 @@ const mongoose = require("mongoose");
 const client = require("./db");
 const User = require("./models/userModels");
 const { getAllUsers } = require("./controllers/userController");
+const bcrypt = require("bcrypt");
+
+const saltRounds = 10;
 
 const app = express();
 
@@ -56,7 +59,12 @@ app.post("/signup", upload.single("profileImage"), (req, res) => {
   let user = new User();
   user.id = uuidv4();
   user.username = req.body.username;
-  user.password = req.body.password;
+  // hash's the password and stores it into the users password field
+  const plaintextPassword = req.body.password;
+  const hash = bcrypt.hashSync(plaintextPassword, saltRounds);
+  user.password = hash;
+
+  //   user.password = req.body.password;
   user.email = req.body.email;
 
   if (req.file) {
@@ -67,7 +75,7 @@ app.post("/signup", upload.single("profileImage"), (req, res) => {
   }
   // add user to the database
   user.save().then((result) => {
-    res.redirect("/");
+    res.redirect("/login");
   });
 });
 
