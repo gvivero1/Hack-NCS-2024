@@ -50,18 +50,42 @@ app.get("/login", (req, res) => {
   res.render("login");
 });
 
+app.post("/login", async (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+  const user = await User.findOne({ username: username });
+  if (!user) {
+    console.error("User not found");
+    return res.status(404).send("User not found");
+  }
+  const match = bcrypt.compareSync(password, user.password);
+  if (match) {
+    let path = "/displayUsers";
+
+    res.redirect("/displayUsers");
+  } else {
+    console.error("Password is incorrect");
+    res.status(401).send("Password is incorrect");
+  }
+});
+
 app.get("/signup", (req, res) => {
   res.render("signup");
 });
 
-app.post("/signup", upload.single("profileImage"), (req, res) => {
+app.post("/signup", upload.single("profileImage"), async (req, res) => {
   console.log(req.body);
 
   let user = new User();
   user.id = uuidv4();
   user.username = req.body.username;
+  user.name = req.body.name;
   // hash's the password and stores it into the users password field (hashing the password for security purposes)
   const plaintextPassword = req.body.password;
+  if (plaintextPassword.length < 8) {
+    console.error("Password should be at least 8 characters");
+    return res.status(400).send("Password should be at least 8 characters");
+  }
   if (!plaintextPassword) {
     console.error("Password is required");
     return res.status(400).send("Password is required");
@@ -79,9 +103,22 @@ app.post("/signup", upload.single("profileImage"), (req, res) => {
     };
   }
   // add user to the database
-  user.save().then((result) => {
-    res.redirect("/login");
-  });
+  try {
+    await user.save();
+    res.send("User registered successfully");
+  } catch (err) {
+    // If there's a validation error, send the error message to the frontend
+    if (err.name === "ValidationError") {
+      return res.status(400).send(err.message);
+    }
+
+    // If it's not a validation error, send a generic error message
+    return res.status(500).send("An error occurred while registering the user");
+  }
+
+  // user.save().then((result) => {
+  //   res.redirect("/login");
+  // });
 });
 
 app.get("/displayUsers", async (req, res) => {
