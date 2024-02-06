@@ -40,6 +40,16 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 // app.use(morgan("dev"));
 
+//creates a session for users
+app.use(
+  session({
+    secret: client.myLongSessionKey,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }, // set to true if you're using https
+  })
+);
+
 const storage = multer.memoryStorage(); // Store files in memory as buffers
 const upload = multer({ storage: storage });
 
@@ -61,9 +71,21 @@ app.post("/login", async (req, res) => {
   }
   const match = bcrypt.compareSync(password, user.password);
   if (match) {
-    let path = "/displayUsers";
+    req.session.userId = user.id;
+    console.log(req.session.userId);
 
-    res.redirect("/displayUsers");
+    // Save the session before redirecting
+    req.session.save((err) => {
+      if (err) {
+        console.error("Error saving session:", err);
+        return res.status(500).send("Error saving session");
+      } else {
+        console.log("Session saved");
+
+        // Redirect to the profile page of the logged-in user
+        res.redirect("/profile");
+      }
+    });
   } else {
     console.error("Password is incorrect");
     res.status(401).send("Password is incorrect");
@@ -130,6 +152,19 @@ app.get("/displayUsers", async (req, res) => {
     console.error("Error retrieving users:", err);
     res.status(500).send("Error retrieving users");
   }
+});
+
+app.get("/profile", async (req, res) => {
+  if (!req.session.userId) {
+    console.error("User is not logged in");
+    return res.status(401).send("User is not logged in");
+  }
+
+  let user = await User.findOne({ id: req.session.userId });
+
+  // const userId = req.session.userId;
+
+  res.render("profile", { user });
 });
 
 app.get("/createPost", (req, res) => {

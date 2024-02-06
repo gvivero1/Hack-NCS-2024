@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile</title>
+  </head>
+  <body>
+    <h1><%=user.name%>'s Profile</h1>
+    <img
+      src="data:<%= user.profileImage.contentType %>;base64,<%= user.profileImage.data.toString('base64') %>"
+      alt="Profile Image"
+      style="width: 100px; height: 100px; border-radius: 50%"
+    />
+    <p>Username: <strong><%= user.username %></strong></p>
+    <p>Email: <strong><%= user.email %></strong></p>
+  </body>
+</html>
