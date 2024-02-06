@@ -8,6 +8,7 @@ const User = require("./models/userModels");
 const { getAllUsers } = require("./controllers/userController");
 const bcrypt = require("bcrypt");
 const Post = require("./models/postModels");
+const session = require("express-session");
 
 const saltRounds = 10;
 
