@@ -105,7 +105,7 @@ app.post("/signup", upload.single("profileImage"), async (req, res) => {
   // add user to the database
   try {
     await user.save();
-    res.send("User registered successfully");
+    res.redirect("/login");
   } catch (err) {
     // If there's a validation error, send the error message to the frontend
     if (err.name === "ValidationError") {
