@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/login.css">
+    <title>Create Post</title>
+</head>
+<body>
+  <div class="container">
+    <h2>Create Posts</h2>
+    <form action="/createPost" method="POST" enctype="multipart/form-data">
+        <label for="title">Title:</label>
+        <input placeholder="Title"type="text" id="title" name="title" placeholder="Title" />
+        <br />
+        <label for="content">Content:</label>
+        <input placeholder="Description"type="text" id="content" name="content" placeholder="Content" />
+        <br />
+        <label or="images">Images (Hold ctr(windows) or cmd(mac) while selecting your images to add multiple): </label>
+        <input type="file" id="images" name="images" multiple>
+        <br>
+        <label for="category">Category</label>
+        <select id="category" name="category">
+            <option value="Fair">Fair</option>
+            <option value="Museum">Museum</option>
+            <option value="Concerts">Concerts</option>
+            <option value="Film">Film</option>
+            <option value="Live Performances">Live Performances</option>
+            <option value="Sports">Sports</option>
+            <option value="Hiking">Hiking</option>
+            <option value="Food">Food</option>
+            <option value="Other">Other</option>
+        </select>
+        <br>
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location" placeholder="Location"/>
+        <br>
+        <label for="season">Season</label>
+        <select id="season" name="season">
+            <option value="Spring">Spring</option>
+            <option value="Summer">Summer</option>
+            <option value="Fall">Fall</option>
+            <option value="Winter">Winter</option>
+        </select>
+        <br>
+        <label for="price">Price:</label>
+        <input type="text" id="price" name="price" placeholder="How much did you spend?"/>
+        <br>
+        <!-- <label for="rating">Rating:</label> -->
+        <!-- 5 star buttons and when clicking on a star, it will be selected one of yall create this if possible -->
+
+
+
+      <input type="submit" value="Submit" />
+    </form>
+  </div>
+</html>
+  
+    

@@ -7,6 +7,7 @@ const client = require("./db");
 const User = require("./models/userModels");
 const { getAllUsers } = require("./controllers/userController");
 const bcrypt = require("bcrypt");
+const Post = require("./models/postModels");
 
 const saltRounds = 10;
 
@@ -59,8 +60,12 @@ app.post("/signup", upload.single("profileImage"), (req, res) => {
   let user = new User();
   user.id = uuidv4();
   user.username = req.body.username;
-  // hash's the password and stores it into the users password field
+  // hash's the password and stores it into the users password field (hashing the password for security purposes)
   const plaintextPassword = req.body.password;
+  if (!plaintextPassword) {
+    console.error("Password is required");
+    return res.status(400).send("Password is required");
+  }
   const hash = bcrypt.hashSync(plaintextPassword, saltRounds);
   user.password = hash;
 
@@ -87,4 +92,35 @@ app.get("/displayUsers", async (req, res) => {
     console.error("Error retrieving users:", err);
     res.status(500).send("Error retrieving users");
   }
+});
+
+app.get("/createPost", (req, res) => {
+  res.render("createPost");
+});
+
+app.post("/createPost", upload.array("images", 10), (req, res) => {
+  let post = new Post();
+  // post.id = uuidv4();
+  post.title = req.body.title;
+  post.content = req.body.content;
+  //post.createdBy = req.body.createdBy;
+  post.likes = 0;
+  post.category = req.body.category;
+  // post date will be set to the date the post was created
+  post.date = new Date();
+  post.season = req.body.season;
+  post.city = req.body.city;
+
+  if (req.files) {
+    post.images = req.files.map((file) => {
+      return {
+        data: file.buffer,
+        contentType: file.mimetype,
+      };
+    });
+  }
+
+  post.save().then((result) => {
+    res.redirect("/");
+  });
 });
