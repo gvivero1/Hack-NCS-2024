@@ -173,7 +173,11 @@ app.get("/profile", async (req, res) => {
 });
 
 app.get("/createPost", (req, res) => {
+  if (!req.session.userId) {
+    res.redirect("/login");
+  }else{
   res.render("createPost");
+  }
 });
 
 app.post("/createPost", upload.array("images", 10), async(req, res) => {
@@ -216,4 +220,16 @@ app.get("/posts", async (req, res) => {
     console.error("Error retrieving post:", err);
     res.status(500).send("Error retrieving post");
   }
+});
+
+app.get('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      console.error("Error destroying session:", err);
+      return res.status(500).send("Error destroying session");
+    }
+
+    // Redirect to the login page or the home page
+    res.redirect('/login');
+  });
 });
