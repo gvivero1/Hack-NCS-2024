@@ -58,7 +58,11 @@ app.get("/", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  res.render("login");
+  if (!req.session.userId) {
+    res.render("login");
+  } else {
+    res.redirect("/profile");
+  }
 });
 
 app.post("/login", async (req, res) => {
