@@ -26,6 +26,7 @@ const postSchema = new mongoose.Schema({
   date: { type: Date },
   season: { type: String },
   city: { type: String },
+  cost:{type: Number}
 });
 
 const Post = mongoose.model("Post", postSchema);
