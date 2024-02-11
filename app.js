@@ -5,6 +5,7 @@ const multer = require("multer");
 const mongoose = require("mongoose");
 const client = require("./db");
 const User = require("./models/userModels");
+const { getAllPosts } = require("./controllers/postController");
 const { getAllUsers } = require("./controllers/userController");
 const bcrypt = require("bcrypt");
 const Post = require("./models/postModels");
@@ -171,14 +172,19 @@ app.get("/createPost", (req, res) => {
   res.render("createPost");
 });
 
-app.post("/createPost", upload.array("images", 10), (req, res) => {
+app.post("/createPost", upload.array("images", 10), async(req, res) => {
   let post = new Post();
   // post.id = uuidv4();
+  let user = await User.findOne({ id: req.session.userId });
+  post.createdBy = user;
+  console.log(user);
+
   post.title = req.body.title;
   post.content = req.body.content;
   //post.createdBy = req.body.createdBy;
   post.likes = 0;
   post.category = req.body.category;
+  post.cost = req.body.cost;
   // post date will be set to the date the post was created
   post.date = new Date();
   post.season = req.body.season;
@@ -196,4 +202,14 @@ app.post("/createPost", upload.array("images", 10), (req, res) => {
   post.save().then((result) => {
     res.redirect("/");
   });
+});
+
+app.get("/posts", async (req, res) => {
+  try {
+    const posts = await getAllPosts();
+    res.render("posts", { posts: posts });
+  } catch (err) {
+    console.error("Error retrieving post:", err);
+    res.status(500).send("Error retrieving post");
+  }
 });

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Post</title>
+  </head>
+  <body>
+    <h1>Posts</h1>
+    <ul>
+      <% posts.forEach(function(post) { %>
+        <li>
+          <h3><%= post.title %></h3>
+          <!-- <%=post.createdBy.username %> created code for user, the user is saved in db but cannot display username for the user -->
+          <small>Created by: , at <%=post.city%>, Season: <%=post.season%>, Cost: <%=post.cost%>$</small>
+          <br>
+          <% for (let i = 0; i < post.images.length; i++) { %>
+            <img
+              src="data:<%= post.images[i].contentType %>;base64,<%= post.images[i].data.toString('base64') %>"
+              alt="Image <%= i + 1 %>"
+              style="width: 100px; height: 100px; border-radius: 10px; margin: 5px;"
+            />
+            <br>
+          <% } %>
+          <p><%= post.content %></span>
+        </li>
+      <% }); %>
+    </ul>
+  </body>
+  
+</html>
