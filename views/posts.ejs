@@ -11,8 +11,8 @@
       <% posts.forEach(function(post) { %>
         <li>
           <h3><%= post.title %></h3>
-          <!-- <%=post.createdBy.username %> created code for user, the user is saved in db but cannot display username for the user -->
-          <small>Created by: , at <%=post.city%>, Season: <%=post.season%>, Cost: <%=post.cost%>$</small>
+          <!-- post.createdBy.username created code for user, the user is saved in db but cannot display username for the user -->
+          <small>Created by: <%= post.createdBy ? post.createdBy.username : 'No user' %>, at <%=post.city%>, Season: <%=post.season%>, Cost: <%=post.cost%>$</small>
           <br>
           <% for (let i = 0; i < post.images.length; i++) { %>
             <img
